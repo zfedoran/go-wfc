@@ -1,6 +1,6 @@
 # go-wfc
 Randomly generated constraint based tile maps. This package uses the 
-*Wave Function Collapse* algorithm as described by Oskar Stålberg.\
+*Wave Function Collapse* algorithm as described by Oskar Stålberg.
 
 The wave function collapse algorithm is a recursive algorithm that picks a
 random tile for a slot on the output image and removes impossible neighbors
