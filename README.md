@@ -1,9 +1,10 @@
 # go-wfc
 Wave Function Collapse (WFC) as described by Oskar Stålberg.
 
-![wfc](/doc/images/banner.png?raw=true)
+<img src="/doc/images/banner.png?raw=true" width="80%">
 
-## Overview:
+
+## Overview
 
 The wave function collapse algorithm is a recursive algorithm that picks a
 random tile for a slot on the output image and removes impossible neighbors
@@ -43,7 +44,7 @@ to build constraints.
 <img src="/doc/images/adjacencies.jpg?raw=true" width="50%">
 
 
-This package ships with an adjacency constraint implementation that scans three
+This package ships with an [adjacency constraint implementation](https://github.com/zfedoran/go-wfc/blob/main/pkg/wfc/constraint.go#L30) that scans three
 colors along each edge of each input tile. These colors are turned into a hash
 that represents that edge. Any other tiles that have the same hash value in the
 opposite direction are considered possible adjacencies automatically.
