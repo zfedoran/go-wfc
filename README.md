@@ -38,7 +38,7 @@ duplicate the image reference when calling the initialize method.
 
 ### Adjacencies / Constraints
 
-The wave function requires some kind of adjacency mapping in order to remove
+The wave function collapse algorithm requires some kind of adjacency mapping in order to remove
 impossible tiles and stitch together a possible output using the input set.
 
 By default, the package uses the color values along the four edges of each tile (`Up`, `Down`, `Left`, `Right`)
