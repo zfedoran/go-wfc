@@ -1,18 +1,18 @@
 # go-wfc
-Randomly generated constraint based tile maps. This package uses the 
-*Wave Function Collapse* algorithm as described by Oskar Stålberg.
+Randomly generated constraint based tile maps. 
+
+## Overview
+This package uses the *Wave Function Collapse* algorithm as described by Oskar Stålberg.
 
 The wave function collapse algorithm is a recursive algorithm that picks a
 random tile for a slot on the output image and removes impossible neighbors
 until only a single possibility remains. The algorithm is covered in more 
-detail below.
+detail [below](#algorithm).
 
-This package is designed for use in games and as such it is faster than the 
-original [wfc](https://github.com/mxgmn/WaveFunctionCollapse) implementation.
 If you need a generic algorithm, then please check out the golang fork of 
 the [original work](https://github.com/shawnridgeway/wfc).
 
-<img src="/doc/images/banner.png?raw=true" width="80%">
+<img src="/doc/images/banner.jpg?raw=true" width="80%">
 
 
 ### Tiles
@@ -22,7 +22,7 @@ need to be designed to fit together. The tiles should have matching
 colors along edges that should appear next to each other in the final 
 output. Other than that, no manual setup or description files are needed.
 
-You should reference the example folder when making a tile set. 
+You should reference the [example folder](/example/) when making a tile set. 
 
 ![sample](/doc/images/tiles.png?raw=true)
 
@@ -39,18 +39,22 @@ duplicate the image reference when calling the initialize method.
 ### Adjacencies / Constraints
 
 The wave function requires some kind of adjacency mapping in order to remove
-impossible tiles. By default, this package uses the color values along the edges
-to build constraints.
+impossible tiles and stitch together a possible output using the input set.
 
-<img src="/doc/images/adjacencies.jpg?raw=true" width="50%">
+By default, the package uses the color values along the four edges of each tile (`Up`, `Down`, `Left`, `Right`)
+to build constraints. But, you can [customize](#custom-constraints) this behaviour if you'd like.
+
+<img src="/doc/images/constraints.jpg?raw=true" width="30%">
 
 
-This package ships with an [adjacency constraint implementation](https://github.com/zfedoran/go-wfc/blob/main/pkg/wfc/constraint.go#L30) that scans three
-colors along each edge of each input tile. These colors are turned into a hash
-that represents that edge. Any other tiles that have the same hash value in the
+When designing your tiles, think about how the color values line up. They should be exactly the same on the middle 3 points for two potentially adjacent tiles. For example, the following tiles could appear as shown below because they share the same colors on the bottom of the first and the top of the second.
+
+<img src="/doc/images/adjacencies.jpg?raw=true" width="30%">
+
+You can view the default adjacency constraint implementation [here](https://github.com/zfedoran/go-wfc/blob/main/pkg/wfc/constraint.go#L30). 
+It scans colors along each edge of each input tile. These colors are turned into a hash
+that represents that edge. Any tiles that have the same hash value in the
 opposite direction are considered possible adjacencies automatically.
-
-<img src="/doc/images/constraints.jpg?raw=true" width="50%">
 
 
 ### Contradictions
@@ -180,8 +184,6 @@ custom constraint function.
 The algorithm is covered in detail here:
 https://www.youtube.com/watch?v=0bcZb-SsnrA&t=350s
 
-#### At a high level
-
 1) A set of input image tiles (or modules) are loaded into memory. 
 2) A wave function is defined with the desired output width and height (in
 units of tiles).
@@ -197,6 +199,8 @@ recurse into it's neighbors to remove impossible tiles.
 found and we need to go back to step 3) and try again.
 8) Once no more changes are left to propagate, go to step 4) and recurse until
 all slots are collapsed to a single state.
+
+Or, you if you prefer, here is the [actual implementation](https://github.com/zfedoran/go-wfc/blob/main/pkg/wfc/wave.go#L195).
 
 ## Artwork
 
