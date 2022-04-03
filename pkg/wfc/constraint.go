@@ -1,6 +1,7 @@
 package wfc
 
 import (
+	"bytes"
 	"crypto/sha256"
 	"fmt"
 	"image"
@@ -18,56 +19,61 @@ import (
 // bits. This rounds the color values to allow for some flexibility.
 type ConstraintId [8]byte
 
+// Equal returns true if the two adjacency constraints are equal.
+func (c ConstraintId) Equal(o ConstraintId) bool {
+	return bytes.Equal(c[:], o[:])
+}
+
 // ConstraintFunc is a function that returns an adjacency hash for an image tile
 // in a specified direction.
 type ConstraintFunc func(image.Image, Direction) ConstraintId
 
 // The default constraint function uses color values to generate an adjacency.
-var DefaultConstraintFunc ConstraintFunc = GetConstraintId
+var DefaultConstraintFunc ConstraintFunc = GetConstraintFunc(3)
 
-// GetConstraintId returns the adjacency constraint id for the given tile image
-// in the provided direction.
-func GetConstraintId(img image.Image, d Direction) ConstraintId {
-	w := img.Bounds().Max.X
-	h := img.Bounds().Max.Y
+// GetConstraintFunc returns a constraint function that uses the given number of
+// color lookups
+func GetConstraintFunc(count int) ConstraintFunc {
+	count += 1
+	return func(img image.Image, dr Direction) ConstraintId {
+		// returns the adjacency constraint id for the given tile image
+		// in the provided direction.
 
-	// Divide into 4 chunks and nudge slightly to not align on popular grids
-	u := w / 4.0 - (img.Bounds().Max.X/10.0)
-	v := h / 4.0 - (img.Bounds().Max.Y/10.0)
+		w := img.Bounds().Max.X
+		h := img.Bounds().Max.Y
 
-	var hash string
-	var a, b, c Color
+		u := w / count
+		v := h / count
 
-	switch d {
-	case Up:
-		a = GetColor(img, u*1, 0)
-		b = GetColor(img, u*2, 0)
-		c = GetColor(img, u*3, 0)
-	case Down:
-		a = GetColor(img, u*1, h-1)
-		b = GetColor(img, u*2, h-1)
-		c = GetColor(img, u*3, h-1)
-	case Left:
-		a = GetColor(img, 0, v*1)
-		b = GetColor(img, 0, v*2)
-		c = GetColor(img, 0, v*3)
-	case Right:
-		a = GetColor(img, w-1, v*1)
-		b = GetColor(img, w-1, v*2)
-		c = GetColor(img, w-1, v*3)
+		var hash string
+		points := make([]Color, count)
+
+		for i := 0; i < count; i++ {
+			switch dr {
+			case Up:
+				points[i] = GetColor(img, u+i*u, 0)
+			case Down:
+				points[i] = GetColor(img, u+i*u, h-1)
+			case Left:
+				points[i] = GetColor(img, 0, v+i*v)
+			case Right:
+				points[i] = GetColor(img, w-1, v+i*v)
+			}
+		}
+
+		// Generate a hash from the colors
+		hash = ""
+		for _, c := range points {
+			hash += HexFromColor(c)
+		}
+
+		sum := sha256.Sum256([]byte(hash))
+		res := fmt.Sprintf("%x", sum)[:8]
+
+		var id ConstraintId
+		copy(id[:], res)
+		return id
 	}
-
-	// Generate a hash from the colors
-	hash = HexFromColor(DiscardLeastSignificantBits(a, 2)) + ":" +
-		HexFromColor(DiscardLeastSignificantBits(b, 2)) + ":" +
-		HexFromColor(DiscardLeastSignificantBits(c, 2))
-
-	sum := sha256.Sum256([]byte(hash))
-	res := fmt.Sprintf("%x", sum)[:8]
-
-	var id ConstraintId
-	copy(id[:], res)
-	return id
 }
 
 // GetConstraintFromHex returns the adjacency constraint id for the given hex

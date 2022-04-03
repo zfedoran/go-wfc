@@ -159,7 +159,7 @@ func (w *Wave) CollapseRandomSlot() *Slot {
 	for {
 		slot := w.PossibilitySpace[rand.Intn(len(w.PossibilitySpace))]
 
-		if len(slot.Superposition) == 1 {
+		if len(slot.Superposition) <= 1 {
 			continue
 		}
 

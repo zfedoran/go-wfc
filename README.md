@@ -34,26 +34,32 @@ along all four edges. The probability for each alternate tile is the same. If
 you'd like to increase/lower the probability of a particular tile, simply
 duplicate the image reference when calling the initialize method.
 
-* Unlike the original WFC implementation, no manual setup or description files are needed.
+* Unlike the original WFC implementation, no manual setup or description files
+are needed.
 
 ### Adjacencies / Constraints
 
-The wave function collapse algorithm requires some kind of adjacency mapping in order to remove
-impossible tiles and stitch together a possible output using the input set.
+The wave function collapse algorithm requires some kind of adjacency mapping in
+order to remove impossible tiles and stitch together a possible output using the
+input set.
 
-By default, the package uses the color values along the four edges of each tile (`Up`, `Down`, `Left`, `Right`)
-to build constraints. But, you can [customize](#custom-constraints) this behaviour if you'd like.
+By default, the package uses the color values along the four edges of each tile
+(`Up`, `Down`, `Left`, `Right`) to build constraints. But, you can
+[customize](#custom-constraints) this behaviour if you'd like.
 
 <img src="/doc/images/constraints.jpg?raw=true" width="50%">
 
-
-When designing your tiles, think about how the color values line up. They should be exactly the same on the middle 3 points for two potentially adjacent tiles. For example, the following tiles could appear as shown below because they share the same colors on the bottom of the first and the top of the second.
+When designing your tiles, think about how the color values line up. They should
+be exactly the same on the middle 3 points for two potentially adjacent tiles.
+For example, the following tiles could appear as shown below because they share
+the same colors on the bottom of the first and the top of the second.
 
 <img src="/doc/images/adjacencies.jpg?raw=true" width="50%">
 
-You can view the default adjacency constraint implementation [here](https://github.com/zfedoran/go-wfc/blob/main/pkg/wfc/constraint.go#L30). 
-It scans colors along each edge of each input tile. These colors are turned into a hash
-that represents that edge. Any tiles that have the same hash value in the
+You can view the default adjacency constraint implementation
+[here](https://github.com/zfedoran/go-wfc/blob/main/pkg/wfc/constraint.go#L30). 
+It scans colors along each edge of each input tile. These colors are turned into
+a hash that represents that edge. Any tiles that have the same hash value in the
 opposite direction are considered possible adjacencies automatically.
 
 
@@ -174,6 +180,15 @@ Complete source can be found here:
 If you'd like to customize or change this logic, you are able to pass in a
 custom constraint function.
 
+You can choose a different number of lookup points (3 is the default). For
+example, 2 lookup points.
+
+```go
+  wave.NewWithCustomConstraints(tiles, width, height, wfc.GetConstraintFunc(2))
+```
+
+Or, you can provide your own.
+
 ```go
   wave.NewWithCustomConstraints(tiles, width, height, 
     func(img image.Image, d Direction) ConstraintId {
@@ -206,12 +221,19 @@ Or, you if you prefer, here is the [actual implementation](https://github.com/zf
 
 ## Artwork
 
-The awesome artwork in this repository was done by [@makionfire](https://twitter.com/makionfire). If you need help designing a tile set, I highly recommend reaching out to her. A huge shout-out to `@makionfire` for letting me use this tileset.
+The awesome artwork in this repository was done by
+[@makionfire](https://twitter.com/makionfire). If you need help designing a tile
+set, I highly recommend reaching out to her. A huge shout-out to `@makionfire`
+for letting me use this tileset.
 
 The artwork itself does **not** fall under the MIT licence.
 
 ## Licence
 
-The licence for the source code in this package is MIT. Meaning, do whatever you'd like but we'd love a shoutout. The goal is to get more folks to build games with golang.
+The licence for the source code in this package is MIT. Meaning, do whatever
+you'd like but we'd love a shoutout. The goal is to get more folks to build
+games with golang.
 
-If you like this work and want to buy me or the artist a coffee or beer, you're free to do so by sending to some SOL to [🍺💵.sol](https://naming.bonfida.org/#/domain/%F0%9F%8D%BA%F0%9F%92%B5)
+If you like this work and want to buy me or the artist a coffee or beer, you're
+free to do so by sending to some SOL to
+[🍺💵.sol](https://naming.bonfida.org/#/domain/%F0%9F%8D%BA%F0%9F%92%B5)

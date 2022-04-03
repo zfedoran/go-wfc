@@ -13,7 +13,7 @@ func (m *Module) IsPossibleFrom(from *Slot, forward Direction) bool {
 	backward := forward.Opposite()
 
 	for _, c := range from.Superposition {
-		if m.Adjacencies[backward] == c.Adjacencies[forward] {
+		if m.Adjacencies[backward].Equal(c.Adjacencies[forward]) {
 			return true
 		}
 	}

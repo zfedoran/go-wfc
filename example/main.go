@@ -7,9 +7,12 @@ import (
 	"github.com/zfedoran/go-wfc/pkg/wfc"
 )
 
+// Use 2 color lookups to generate adjacency hash values
+var constraintFn = wfc.GetConstraintFunc(2)
+
 func main() {
-	input_tileset := "./example/internal/input"
-	output_image := "./example/internal/output/%d.png"
+	input_tileset := "./internal/input"
+	output_image := "./internal/output/%d.png"
 
 	// Print the adjacency hash values for the provided tileset.
 	printAdjacencyHashValues(input_tileset)
@@ -33,11 +36,11 @@ func collapseWave(tileset_folder, output_image string) {
 	height := 8
 
 	// Setup the initialized state
-	wave := wfc.New(images, width, height)
+	wave := wfc.NewWithCustomConstraints(images, width, height, constraintFn)
 	wave.Initialize(seed)
 
 	// Force the top tiles to be sky
-	sky := wfc.GetConstraintFromHex("8cbc4760")
+	sky := wfc.GetConstraintFromHex("c8688ac0")
 	for i := 0; i < width; i++ {
 		slot := wave.PossibilitySpace[i]
 		modules := make([]*wfc.Module, 0)
@@ -80,7 +83,7 @@ func printAdjacencyHashValues(input_tileset string) {
 	fmt.Println("|-------|----------|----------|")
 	for i, img := range images {
 		for _, d := range wfc.Directions {
-			fmt.Printf("|%d\t|%s\t   | %s | %dx%d\n", i, d.ToString(), wfc.GetConstraintId(img, d), img.Bounds().Max.X, img.Bounds().Max.Y)
+			fmt.Printf("|%d\t|%s\t   | %s | %dx%d\n", i, d.ToString(), constraintFn(img, d), img.Bounds().Max.X, img.Bounds().Max.Y)
 		}
 		fmt.Printf("|- - - -|- - - - - |- - - - - |\n")
 	}
