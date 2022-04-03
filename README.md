@@ -1,9 +1,6 @@
 # go-wfc
-Wave Function Collapse (WFC) as described by Oskar Stålberg.
-
-![wfc](/doc/images/banner.png?raw=true)
-
-## Overview:
+Randomly generated constraint based tile maps. This package uses the 
+*Wave Function Collapse* algorithm as described by Oskar Stålberg.
 
 The wave function collapse algorithm is a recursive algorithm that picks a
 random tile for a slot on the output image and removes impossible neighbors
@@ -15,12 +12,15 @@ original [wfc](https://github.com/mxgmn/WaveFunctionCollapse) implementation.
 If you need a generic algorithm, then please check out the golang fork of 
 the [original work](https://github.com/shawnridgeway/wfc).
 
+<img src="/doc/images/banner.png?raw=true" width="80%">
+
 
 ### Tiles
 
-You'll need a set of tiles, also referred to as `modules`, that have been
-designed to fit together. These tiles should have matching colors along 
-edges that should appear next to each other in the final output.
+You'll need a set of tiles, also referred to as `modules`. These will 
+need to be designed to fit together. The tiles should have matching 
+colors along edges that should appear next to each other in the final 
+output. Other than that, no manual setup or description files are needed.
 
 You should reference the example folder when making a tile set. 
 
@@ -34,6 +34,8 @@ along all four edges. The probability for each alternate tile is the same. If
 you'd like to increase/lower the probability of a particular tile, simply
 duplicate the image reference when calling the initialize method.
 
+* Unlike the original WFC implementation, no manual setup or description files are needed.
+
 ### Adjacencies / Constraints
 
 The wave function requires some kind of adjacency mapping in order to remove
@@ -43,7 +45,7 @@ to build constraints.
 <img src="/doc/images/adjacencies.jpg?raw=true" width="50%">
 
 
-This package ships with an adjacency constraint implementation that scans three
+This package ships with an [adjacency constraint implementation](https://github.com/zfedoran/go-wfc/blob/main/pkg/wfc/constraint.go#L30) that scans three
 colors along each edge of each input tile. These colors are turned into a hash
 that represents that edge. Any other tiles that have the same hash value in the
 opposite direction are considered possible adjacencies automatically.
