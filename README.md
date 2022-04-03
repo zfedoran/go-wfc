@@ -96,13 +96,14 @@ tiles, you'd pass in the following.
 ```go
   // Setup the initialized state. The output image will be 32 x 8 tiles.
   wave := wfc.New(input_images, 32, 8)
+  wave.Initialize(42) // seed: 42
 ```
 
 Finally, collapse the wave into a single state (if possible).
 
 ```go
-  // Collapse the wave function (make up to 100 attempts, and use a random seed of 42)
-  err = wave.Collapse(100, 42)
+  // Collapse the wave function (make up to 100 attempts)
+  err = wave.Collapse(200)
   if err != nil {
     panic(err)
   }
@@ -149,9 +150,10 @@ func collapseWave(tileset_folder, output_image string) {
 
   // Setup the initialized state
   wave := wfc.New(images, 32, 8)
-
+  wave.Initialize(seed)
+  
   // Collapse the wave function (make up to 100 attempts)
-  err = wave.Collapse(100, seed)
+  err = wave.Collapse(200)
   if err != nil {
     // don't panic here, we want to generate the image anyway
     fmt.Printf("unable to generate: %v", err)
