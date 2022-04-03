@@ -44,12 +44,12 @@ impossible tiles and stitch together a possible output using the input set.
 By default, the package uses the color values along the four edges of each tile (`Up`, `Down`, `Left`, `Right`)
 to build constraints. But, you can [customize](#custom-constraints) this behaviour if you'd like.
 
-<img src="/doc/images/constraints.jpg?raw=true" width="30%">
+<img src="/doc/images/constraints.jpg?raw=true" width="50%">
 
 
 When designing your tiles, think about how the color values line up. They should be exactly the same on the middle 3 points for two potentially adjacent tiles. For example, the following tiles could appear as shown below because they share the same colors on the bottom of the first and the top of the second.
 
-<img src="/doc/images/adjacencies.jpg?raw=true" width="30%">
+<img src="/doc/images/adjacencies.jpg?raw=true" width="50%">
 
 You can view the default adjacency constraint implementation [here](https://github.com/zfedoran/go-wfc/blob/main/pkg/wfc/constraint.go#L30). 
 It scans colors along each edge of each input tile. These colors are turned into a hash
