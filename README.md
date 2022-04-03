@@ -14,6 +14,11 @@ the [original work](https://github.com/shawnridgeway/wfc).
 
 <img src="/doc/images/banner.jpg?raw=true" width="80%">
 
+### Why
+
+There is already a wfc golang library so why another one? The existing one is a lot more generic and quite a bit slower as a result. The setup for the original implementation can be very tedious. Additionally, I found it hard to follow and modify. 
+
+This variation follows Oskars work and aims to simplify the original work tor easy integration into games.
 
 ### Tiles
 
