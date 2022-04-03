@@ -58,9 +58,9 @@ func GetConstraintId(img image.Image, d Direction) ConstraintId {
 	}
 
 	// Generate a hash from the colors
-	hash = HexFromColor(DiscardLeastSignificantBits(a, 4)) + ":" +
-		HexFromColor(DiscardLeastSignificantBits(b, 4)) + ":" +
-		HexFromColor(DiscardLeastSignificantBits(c, 4))
+	hash = HexFromColor(DiscardLeastSignificantBits(a, 2)) + ":" +
+		HexFromColor(DiscardLeastSignificantBits(b, 2)) + ":" +
+		HexFromColor(DiscardLeastSignificantBits(c, 2))
 
 	sum := sha256.Sum256([]byte(hash))
 	res := fmt.Sprintf("%x", sum)[:8]
