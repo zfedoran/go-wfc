@@ -31,8 +31,9 @@ func GetConstraintId(img image.Image, d Direction) ConstraintId {
 	w := img.Bounds().Max.X
 	h := img.Bounds().Max.Y
 
-	u := w / 4.0
-	v := h / 4.0
+	// Divide into 4 chunks and nudge slightly to not align on popular grids
+	u := w / 4.0 - (img.Bounds().Max.X/10.0)
+	v := h / 4.0 - (img.Bounds().Max.Y/10.0)
 
 	var hash string
 	var a, b, c Color
