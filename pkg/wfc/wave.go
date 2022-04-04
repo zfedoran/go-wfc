@@ -203,7 +203,7 @@ func (w *Wave) Recurse() error {
 func (w *Wave) GetPossibleModules(a, b *Slot, d Direction) []*Module {
 	res := make([]*Module, 0)
 	for _, m := range b.Superposition {
-		if w.IsPossibleFn(m, a, d) {
+		if w.IsPossibleFn(m, a, b, d) {
 			res = append(res, m)
 		}
 	}

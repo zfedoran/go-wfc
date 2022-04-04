@@ -26,10 +26,10 @@ func (s *Slot) Collapse() {
 
 // IsPossibleFunc is a function that returns whether or not a module is possible
 // given a slot and direction. Use this if you'd like custom logic.
-type IsPossibleFunc func(state *Module, from *Slot, d Direction) bool
+type IsPossibleFunc func(state *Module, from, to *Slot, d Direction) bool
 
 // DefaultIsPossibleFunc returns whether or not a module is possible given a
 // slot and direction.
-func DefaultIsPossibleFunc(state *Module, from *Slot, d Direction) bool {
+func DefaultIsPossibleFunc(state *Module, from, to *Slot, d Direction) bool {
 	return state.IsPossibleFrom(from, d)
 }
