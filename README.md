@@ -1,8 +1,13 @@
 # go-wfc
 Randomly generated constraint based tile maps. 
 
-Live example:
-https://zfedoran.github.io/go-wfc-example/
+## Demos
+
+Live demo (wasm):
+* https://zfedoran.github.io/go-wfc-example/
+
+Live algorithm animation (wasm):
+* https://zfedoran.github.io/go-wfc-algorithm/
 
 
 ## Overview
