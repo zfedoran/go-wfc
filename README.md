@@ -1,6 +1,10 @@
 # go-wfc
 Randomly generated constraint based tile maps. 
 
+Live example:
+https://zfedoran.github.io/go-wfc-example/
+
+
 ## Overview
 This package uses the *Wave Function Collapse* algorithm as described by Oskar
 Stålberg.
@@ -185,6 +189,10 @@ func collapseWave(tileset_folder, output_image string) {
 
 Complete source can be found here:
 [example/main.go](example/main.go)
+
+Also, check out the animated version:
+https://github.com/zfedoran/go-wfc-example
+
 
 ## Custom Constraints
 If you'd like to customize or change this logic, you are able to pass in a
