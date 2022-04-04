@@ -6,8 +6,8 @@ https://zfedoran.github.io/go-wfc-example/
 
 
 ## Overview
-This package uses the *Wave Function Collapse* algorithm as described by Oskar
-Stålberg.
+This package uses the *Wave Function Collapse* algorithm as described by [Oskar
+Stålberg](https://www.youtube.com/watch?v=0bcZb-SsnrA&t=350s).
 
 The wave function collapse algorithm is a recursive algorithm that picks a
 random tile for a slot on the output image and removes impossible neighbors
