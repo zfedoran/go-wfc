@@ -69,7 +69,7 @@ func NewWithCustomConstraints(tiles []image.Image, width, height int, fn Constra
 
 	// Automatically generate adjacency constraints for each input tile.
 	for i, tile := range tiles {
-		module := Module{Image: tile}
+		module := Module{Index: i, Image: tile}
 		for _, d := range Directions {
 			module.Adjacencies[d] = fn(tile, d)
 		}
