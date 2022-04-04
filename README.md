@@ -2,7 +2,8 @@
 Randomly generated constraint based tile maps. 
 
 ## Overview
-This package uses the *Wave Function Collapse* algorithm as described by Oskar Stålberg.
+This package uses the *Wave Function Collapse* algorithm as described by Oskar
+Stålberg.
 
 The wave function collapse algorithm is a recursive algorithm that picks a
 random tile for a slot on the output image and removes impossible neighbors
@@ -16,9 +17,13 @@ the [original work](https://github.com/shawnridgeway/wfc).
 
 ### Why
 
-There is already a wfc golang library so why another one? The existing one is a lot more generic and quite a bit slower as a result. The setup for the original implementation can be very tedious. Additionally, I found it hard to follow and modify. 
+There is already a wfc golang library so why another one? The existing one is a
+lot more generic and quite a bit slower as a result. Also, the tile setup for
+the original implementation can be very tedious. Additionally, I found it hard
+to follow and modify. 
 
-This variation follows Oskars work and aims to simplify the original work tor easy integration into games.
+This variation follows Oskars work and aims to simplify the original work for
+easy integration into games.
 
 ### Tiles
 
@@ -62,7 +67,7 @@ the same colors on the bottom of the first and the top of the second.
 <img src="/doc/images/adjacencies.jpg?raw=true" width="50%">
 
 You can view the default adjacency constraint implementation
-[here](https://github.com/zfedoran/go-wfc/blob/main/pkg/wfc/constraint.go#L30). 
+[here](https://github.com/zfedoran/go-wfc/blob/main/pkg/wfc/constraint.go#L36). 
 It scans colors along each edge of each input tile. These colors are turned into
 a hash that represents that edge. Any tiles that have the same hash value in the
 opposite direction are considered possible adjacencies automatically.
@@ -222,7 +227,7 @@ found and we need to go back to step 3) and try again.
 8) Once no more changes are left to propagate, go to step 4) and recurse until
 all slots are collapsed to a single state.
 
-Or, you if you prefer, here is the [actual implementation](https://github.com/zfedoran/go-wfc/blob/main/pkg/wfc/wave.go#L195).
+Or, you if you prefer, here is the [actual implementation](https://github.com/zfedoran/go-wfc/blob/main/pkg/wfc/wave.go#L109).
 
 ## Artwork
 

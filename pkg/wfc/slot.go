@@ -13,8 +13,8 @@ import (
 // A Slot that has a single module in its superposition is considered to be a
 // collapsed slot and only has one possible module at its coordinates.
 type Slot struct {
-	X, Y          int
-	Superposition []*Module
+	X, Y          int       // Coordinates of the slot
+	Superposition []*Module // Possible modules at the slot
 }
 
 // Collapse chooses a random module from the list of superpositions available to
@@ -22,4 +22,14 @@ type Slot struct {
 func (s *Slot) Collapse() {
 	module := s.Superposition[rand.Intn(len(s.Superposition))]
 	s.Superposition = []*Module{module}
+}
+
+// IsPossibleFunc is a function that returns whether or not a module is possible
+// given a slot and direction. Use this if you'd like custom logic.
+type IsPossibleFunc func(state *Module, from *Slot, d Direction) bool
+
+// DefaultIsPossibleFunc returns whether or not a module is possible given a
+// slot and direction.
+func DefaultIsPossibleFunc(state *Module, from *Slot, d Direction) bool {
+	return state.IsPossibleFrom(from, d)
 }

@@ -10,17 +10,6 @@ import (
 // Use 2 color lookups to generate adjacency hash values
 var constraintFn = wfc.GetConstraintFunc(2)
 
-func main() {
-	input_tileset := "./internal/input"
-	output_image := "./internal/output/%d.png"
-
-	// Print the adjacency hash values for the provided tileset.
-	printAdjacencyHashValues(input_tileset)
-
-	// Generate an image from the tileset.
-	collapseWave(input_tileset, output_image)
-}
-
 func collapseWave(tileset_folder, output_image string) {
 	// This is just a `[]image.Image`, you can use whatever loader function you'd like
 	images, err := wfc.LoadImageFolder(tileset_folder)
@@ -88,4 +77,15 @@ func printAdjacencyHashValues(input_tileset string) {
 		fmt.Printf("|- - - -|- - - - - |- - - - - |\n")
 	}
 	fmt.Printf("|-------|----------|----------|\n\n")
+}
+
+func main() {
+	input_tileset := "./internal/input"
+	output_image := "./internal/output/%d.png"
+
+	// Print the adjacency hash values for the provided tileset.
+	printAdjacencyHashValues(input_tileset)
+
+	// Generate an image from the tileset.
+	collapseWave(input_tileset, output_image)
 }

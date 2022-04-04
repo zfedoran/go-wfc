@@ -32,28 +32,11 @@ type Wave struct {
 	PossibilitySpace []*Slot   // The 2D grid of slots
 
 	History []*Slot // Slots that have been visited during the current/last collapse iteration
-}
 
-// NewWithCustomConstraints creates a new wave collapse function with the given
-// adjacency constraint calculation function. Use this if you'd like custom
-// logic for specifing constraints.
-func NewWithCustomConstraints(tiles []image.Image, width, height int, fn ConstraintFunc) *Wave {
-	wave := &Wave{
-		Width:  width,
-		Height: height,
-		Input:  make([]*Module, len(tiles)),
-	}
-
-	// Automatically generate adjacency constraints for each input tile.
-	for i, tile := range tiles {
-		module := Module{Image: tile}
-		for _, d := range Directions {
-			module.Adjacencies[d] = fn(tile, d)
-		}
-		wave.Input[i] = &module
-	}
-
-	return wave
+	// Override this if you'd like custom logic when checking if a state is
+	// possible from a direction. This is useful if you'd like to slow down the
+	// collapse or add probabilities.
+	IsPossibleFn IsPossibleFunc
 }
 
 // New creates a new wave collapse function with the given width and height and
@@ -72,24 +55,28 @@ func New(tiles []image.Image, width, height int) *Wave {
 	return NewWithCustomConstraints(tiles, width, height, DefaultConstraintFunc)
 }
 
-// Collapse recursively collapses the possibility space for each slot into a
-// single module.
-//
-// Important: Not all tile sets will allways produce a solution, so this
-// function can return an error if a contradiction is found. You can still
-// export the image of a failed collapse to see which of your tiles is causing
-// issues for you.
-func (w *Wave) Collapse(attempts int) error {
+// NewWithCustomConstraints creates a new wave collapse function with the given
+// adjacency constraint calculation function. Use this if you'd like custom
+// logic for specifing constraints.
+func NewWithCustomConstraints(tiles []image.Image, width, height int, fn ConstraintFunc) *Wave {
+	wave := &Wave{
+		Width:  width,
+		Height: height,
+		Input:  make([]*Module, len(tiles)),
 
-	for i := 0; i < attempts; i++ {
-		err := w.Recurse()
-		if err != nil {
-			return err
-		}
-		w.History = make([]*Slot, 0)
+		IsPossibleFn: DefaultIsPossibleFunc,
 	}
 
-	return nil
+	// Automatically generate adjacency constraints for each input tile.
+	for i, tile := range tiles {
+		module := Module{Image: tile}
+		for _, d := range Directions {
+			module.Adjacencies[d] = fn(tile, d)
+		}
+		wave.Input[i] = &module
+	}
+
+	return wave
 }
 
 // Initialize sets up the wave collapse function so that every slot is in a
@@ -112,31 +99,24 @@ func (w *Wave) Initialize(seed int) {
 	}
 }
 
-// Export takes the current state of the wave collapse function and exports it
-// as an image. Any slots that have not been collapsed will be transparent.
-// Contradictions will be red.
-func (w *Wave) ExportImage() image.Image {
-	u := w.Input[0].Image.Bounds().Max.X
-	v := w.Input[0].Image.Bounds().Max.Y
-	img := image.NewRGBA(image.Rect(0, 0, w.Width*u, w.Height*v))
+// Collapse recursively collapses the possibility space for each slot into a
+// single module.
+//
+// Important: Not all tile sets will allways produce a solution, so this
+// function can return an error if a contradiction is found. You can still
+// export the image of a failed collapse to see which of your tiles is causing
+// issues for you.
+func (w *Wave) Collapse(attempts int) error {
 
-	for _, s := range w.PossibilitySpace {
-		if len(s.Superposition) == 1 {
-			draw.Draw(img,
-				image.Rect(s.X*u, s.Y*v, (s.X+1)*u, (s.Y+1)*v),
-				s.Superposition[0].Image, image.ZP, draw.Over)
+	for i := 0; i < attempts; i++ {
+		err := w.Recurse()
+		if err != nil {
+			return err
 		}
-		if len(s.Superposition) == 0 {
-			c := color.RGBA{255, 0, 0, 255}
-			for x := s.X * u; x < (s.X+1)*u; x++ {
-				for y := s.Y * v; y < (s.Y+1)*v; y++ {
-					img.Set(x, y, c)
-				}
-			}
-		}
+		w.History = make([]*Slot, 0)
 	}
 
-	return img
+	return nil
 }
 
 // CollapseRandomSlot takes a random slot and collapses it into a single module.
@@ -169,29 +149,7 @@ func (w *Wave) CollapseRandomSlot() *Slot {
 	}
 }
 
-// HasVisited checks if the given slot has been visited during the current
-// collapse iteration. This is used to prevent infinite recursion.
-func (w *Wave) HasVisited(s *Slot) bool {
-	for _, h := range w.History {
-		if h == s {
-			return true
-		}
-	}
-	return false
-}
-
-// IsCollapsed checks if the given slot is collapsed. Either in a contradiction
-// state or to a single possible value.
-func (w *Wave) IsCollapsed() bool {
-	for _, s := range w.PossibilitySpace {
-		if len(s.Superposition) > 1 {
-			return false
-		}
-	}
-	return true
-}
-
-// Recurse recursively collapses the wave collapse function.
+// Recurse collapses the wave collapse function recursively.
 func (w *Wave) Recurse() error {
 	if w.IsCollapsed() {
 		return nil
@@ -245,7 +203,7 @@ func (w *Wave) Recurse() error {
 func (w *Wave) GetPossibleModules(a, b *Slot, d Direction) []*Module {
 	res := make([]*Module, 0)
 	for _, m := range b.Superposition {
-		if m.IsPossibleFrom(a, d) {
+		if w.IsPossibleFn(m, a, d) {
 			res = append(res, m)
 		}
 	}
@@ -257,6 +215,28 @@ func (w *Wave) GetPossibleModules(a, b *Slot, d Direction) []*Module {
 // GetSlot returns the slot at the given coordinates in this wave function.
 func (w *Wave) GetSlot(x, y int) *Slot {
 	return w.PossibilitySpace[x+y*w.Width]
+}
+
+// HasVisited checks if the given slot has been visited during the current
+// collapse iteration. This is used to prevent infinite recursion.
+func (w *Wave) HasVisited(s *Slot) bool {
+	for _, h := range w.History {
+		if h == s {
+			return true
+		}
+	}
+	return false
+}
+
+// IsCollapsed checks if the given slot is collapsed. Either in a contradiction
+// state or to a single possible value.
+func (w *Wave) IsCollapsed() bool {
+	for _, s := range w.PossibilitySpace {
+		if len(s.Superposition) > 1 {
+			return false
+		}
+	}
+	return true
 }
 
 // HasNeighbor checks if the given slot has a neighbor in the given direction
@@ -288,4 +268,31 @@ func (w *Wave) GetNeighbor(s *Slot, d Direction) *Slot {
 		return w.GetSlot(s.X+1, s.Y)
 	}
 	return nil
+}
+
+// Export takes the current state of the wave collapse function and exports it
+// as an image. Any slots that have not been collapsed will be transparent.
+// Contradictions will be red.
+func (w *Wave) ExportImage() image.Image {
+	u := w.Input[0].Image.Bounds().Max.X
+	v := w.Input[0].Image.Bounds().Max.Y
+	img := image.NewRGBA(image.Rect(0, 0, w.Width*u, w.Height*v))
+
+	for _, s := range w.PossibilitySpace {
+		if len(s.Superposition) == 1 {
+			draw.Draw(img,
+				image.Rect(s.X*u, s.Y*v, (s.X+1)*u, (s.Y+1)*v),
+				s.Superposition[0].Image, image.ZP, draw.Over)
+		}
+		if len(s.Superposition) == 0 {
+			c := color.RGBA{255, 0, 0, 255}
+			for x := s.X * u; x < (s.X+1)*u; x++ {
+				for y := s.Y * v; y < (s.Y+1)*v; y++ {
+					img.Set(x, y, c)
+				}
+			}
+		}
+	}
+
+	return img
 }
