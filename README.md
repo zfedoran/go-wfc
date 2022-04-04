@@ -19,7 +19,7 @@ the [original work](https://github.com/shawnridgeway/wfc).
 
 <img src="/doc/images/banner.jpg?raw=true" width="80%">
 
-### Why
+## Why?
 
 There is already a wfc golang library so why another one? The existing one is a
 lot more generic and quite a bit slower as a result. Also, the tile setup for
@@ -29,7 +29,7 @@ to follow and modify.
 This variation follows Oskars work and aims to simplify the original work for
 easy integration into games.
 
-### Tiles
+## Tiles
 
 You'll need a set of tiles, also referred to as `modules`. These will 
 need to be designed to fit together. The tiles should have matching 
@@ -51,7 +51,7 @@ duplicate the image reference when calling the initialize method.
 * Unlike the original WFC implementation, no manual setup or description files
 are needed.
 
-### Adjacencies / Constraints
+## Adjacencies / Constraints
 
 The wave function collapse algorithm requires some kind of adjacency mapping in
 order to remove impossible tiles and stitch together a possible output using the
@@ -77,7 +77,7 @@ a hash that represents that edge. Any tiles that have the same hash value in the
 opposite direction are considered possible adjacencies automatically.
 
 
-### Contradictions
+## Contradictions
 
 It is possible that the wave can collapse into a state that has a contradiction.
 For example, sky beneath the ground. If a contradiction is found, the algorithm
