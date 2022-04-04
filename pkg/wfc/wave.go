@@ -84,7 +84,7 @@ func NewWithCustomConstraints(tiles []image.Image, width, height int, fn Constra
 //
 // Each module is equally likely to be at each slot.
 func (w *Wave) Initialize(seed int) {
-	rand.Seed(int64(seed))
+	rand.Seed(int64(seed)) // TODO: move off rand... this isn't thread safe; we can do better :)
 
 	w.PossibilitySpace = make([]*Slot, w.Width*w.Height)
 	for x := 0; x < w.Width; x++ {
