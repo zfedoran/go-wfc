@@ -1,5 +1,5 @@
 # go-wfc
-Randomly generated constraint based tile maps. 
+Procedurally-generated tile maps using wave function collapse. 
 
 ## Demos
 
