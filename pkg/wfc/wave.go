@@ -57,7 +57,7 @@ func New(tiles []image.Image, width, height int) *Wave {
 
 // NewWithCustomConstraints creates a new wave collapse function with the given
 // adjacency constraint calculation function. Use this if you'd like custom
-// logic for specifing constraints.
+// logic for specifying constraints.
 func NewWithCustomConstraints(tiles []image.Image, width, height int, fn ConstraintFunc) *Wave {
 	wave := &Wave{
 		Width:  width,
