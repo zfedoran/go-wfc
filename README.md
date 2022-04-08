@@ -1,3 +1,5 @@
+[![Go Reference](https://pkg.go.dev/badge/github.com/zfedoran/go-wfc/pkg/wfc.svg)](https://pkg.go.dev/github.com/zfedoran/go-wfc/pkg/wfc)
+
 # go-wfc
 Procedurally-generated tile maps using wave function collapse. 
 
