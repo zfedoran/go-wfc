@@ -28,6 +28,7 @@ func collapseWave(tileset_folder, output_image string) {
 	wave := wfc.NewWithCustomConstraints(images, width, height, constraintFn)
 	wave.Initialize(seed)
 
+	// Force edges to be water tiles.
 	water := wfc.GetConstraintFromHex("95282254")
 
 	// Top
