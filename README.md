@@ -1,9 +1,21 @@
+[![Go Reference](https://pkg.go.dev/badge/github.com/zfedoran/go-wfc/pkg/wfc.svg)](https://pkg.go.dev/github.com/zfedoran/go-wfc/pkg/wfc)
+[![Go Report Card](https://goreportcard.com/badge/github.com/zfedoran/go-wfc)](https://goreportcard.com/report/github.com/zfedoran/go-wfc)
+
 # go-wfc
-Randomly generated constraint based tile maps. 
+Procedurally-generated tile maps using wave function collapse. 
+
+## Demos
+
+Live demo (wasm):
+* https://zfedoran.github.io/go-wfc-example/
+
+Live algorithm animation (wasm):
+* https://zfedoran.github.io/go-wfc-algorithm/
+
 
 ## Overview
-This package uses the *Wave Function Collapse* algorithm as described by Oskar
-Stålberg.
+This package uses the *Wave Function Collapse* algorithm as described by [Oskar
+Stålberg](https://www.youtube.com/watch?v=0bcZb-SsnrA&t=350s).
 
 The wave function collapse algorithm is a recursive algorithm that picks a
 random tile for a slot on the output image and removes impossible neighbors
@@ -15,7 +27,7 @@ the [original work](https://github.com/shawnridgeway/wfc).
 
 <img src="/doc/images/banner.jpg?raw=true" width="80%">
 
-### Why
+## Why?
 
 There is already a wfc golang library so why another one? The existing one is a
 lot more generic and quite a bit slower as a result. Also, the tile setup for
@@ -25,7 +37,7 @@ to follow and modify.
 This variation follows Oskars work and aims to simplify the original work for
 easy integration into games.
 
-### Tiles
+## Tiles
 
 You'll need a set of tiles, also referred to as `modules`. These will 
 need to be designed to fit together. The tiles should have matching 
@@ -47,7 +59,7 @@ duplicate the image reference when calling the initialize method.
 * Unlike the original WFC implementation, no manual setup or description files
 are needed.
 
-### Adjacencies / Constraints
+## Adjacencies / Constraints
 
 The wave function collapse algorithm requires some kind of adjacency mapping in
 order to remove impossible tiles and stitch together a possible output using the
@@ -73,7 +85,7 @@ a hash that represents that edge. Any tiles that have the same hash value in the
 opposite direction are considered possible adjacencies automatically.
 
 
-### Contradictions
+## Contradictions
 
 It is possible that the wave can collapse into a state that has a contradiction.
 For example, sky beneath the ground. If a contradiction is found, the algorithm
@@ -185,6 +197,10 @@ func collapseWave(tileset_folder, output_image string) {
 
 Complete source can be found here:
 [example/main.go](example/main.go)
+
+Also, check out the animated version:
+https://github.com/zfedoran/go-wfc-example
+
 
 ## Custom Constraints
 If you'd like to customize or change this logic, you are able to pass in a
