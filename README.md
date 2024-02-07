@@ -260,6 +260,3 @@ The licence for the source code in this package is MIT. Meaning, do whatever
 you'd like but we'd love a shoutout. The goal is to get more folks to build
 games with golang.
 
-If you like this work and want to buy me or the artist a coffee or beer, you're
-free to do so by sending to some SOL to
-[🍺💵.sol](https://naming.bonfida.org/#/domain/%F0%9F%8D%BA%F0%9F%92%B5)
